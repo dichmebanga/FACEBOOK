@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Shipper - OutLand v1.0</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .container {
+        text-align: center;
+        margin-top: 20px;
+      }
+      h1 {
+        position: sticky;
+        top: 0;
+        background-color: #ffffff;
+        z-index: 1000;
+        padding: 10px 0;
+        margin: 0;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      #userData {
+        margin-top: 20px;
+      }
+      .user {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px 0;
+      }
+      .user button {
+        margin-right: 10px;
+        background-color: #add8e6;
+        border: none;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 4px;
+      }
+      .user button:hover {
+        background-color: #87ceeb;
+      }
+      .report {
+        border-color: red;
+        background-color: #ffe6e6;
+      }
+      #scrollToTopButton {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 4px;
+        z-index: 1000;
+      }
+      #scrollToTopButton:hover {
+        background-color: #0056b3;
+      }
+      #locationSelect {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        padding: 5px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="headerTitle">Order Shipper - Đà Nẵng</h1>
+      <select id="locationSelect">
+        <option value="DA_NANG" selected>Đà Nẵng</option>
+        <option value="HA_NOI">Hà Nội</option>
+        <option value="HO_CHI_MINH">Hồ Chí Minh</option>
+        <option value="VINH_PHUC">Vĩnh Phúc</option>
+        <option value="HAI_PHONG">Hải Phòng</option>
+      </select>
+      <button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
+      <div id="userData"></div>
+    </div>
+    <script>
+      const ws = new WebSocket("ws://localhost:8080");
+      const displayedIds = new Set();
+
+      ws.onopen = function () {
+        const locationSelect = document.getElementById("locationSelect");
+        updateHeaderTitle(locationSelect.value);
+        ws.send(
+          JSON.stringify({
+            type: "changeLocation",
+            location: locationSelect.value,
+          })
+        );
+
+        locationSelect.addEventListener("change", function () {
+          ws.send(
+            JSON.stringify({ type: "changeLocation", location: this.value })
+          );
+          updateHeaderTitle(this.value);
+        });
+      };
+
+      ws.onmessage = function (event) {
+        const userData = JSON.parse(event.data);
+        displayUserData(userData);
+      };
+
+      function displayUserData(userData) {
+        if (!userData.id || displayedIds.has(userData.id)) {
+          return;
+        }
+
+        displayedIds.add(userData.id);
+
+        const userDataContainer = document.getElementById("userData");
+        const userDiv = document.createElement("div");
+        userDiv.className = "user";
+
+        if (userData.report) {
+          userDiv.classList.add("report");
+        }
+
+        userDiv.innerHTML = `
+            <p>Khu Vực: ${userData.ship_order.area}</p>
+            <p>Tên: ${userData.title} - SĐT: ${userData.phone}</p>
+            <p>Nội Dung: ${userData.duy}</p>
+            <p>Phí: ${userData.ship_order.fee} - Tạm Ứng: ${userData.ship_order.ad_cash}</p>
+            <p>Số Km: ${userData.ship_order.distance_and_duration}</p>
+            <p>Địa chỉ lấy: ${userData.ship_order.pick_up}</p> 
+            <p>Địa Chỉ Nhận: ${userData.ship_order.drop_off}</p>
+            <button onclick="link('${userData.source_url}')">Xem bài đăng</button>
+            <button onclick="link('${userData.source_actrs_url}')">Liên hệ nhận đơn</button>
+        `;
+
+        if (userDataContainer.firstChild) {
+          userDataContainer.insertBefore(userDiv, userDataContainer.firstChild);
+        } else {
+          userDataContainer.appendChild(userDiv);
+        }
+      }
+
+      function link(url) {
+        window.open(url, "_blank");
+      }
+
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "auto",
+        });
+      }
+
+      function updateHeaderTitle(location) {
+        const headerTitle = document.getElementById("headerTitle");
+        const locationText = document.querySelector(
+          `#locationSelect option[value="${location}"]`
+        ).textContent;
+        headerTitle.textContent = `Order Shipper - ${locationText}`;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "toollikecomment",
+  "version": "1.0.0",
+  "description": "OutLand",
+  "main": "index.js",
+  "scripts": {
+    "facebook": "node facebook.ts",
+    "tiktok": "node tiktok.ts"
+  },
+  "author": "OutLand",
+  "license": "ISC",
+  "dependencies": {
+    "@devicefarmer/adbkit": "^3.2.6",
+    "axios": "^1.6.7",
+    "bluebird": "^3.7.2",
+    "cheerio": "^1.0.0-rc.12",
+    "fs": "^0.0.1-security",
+    "nodemon": "^3.0.3",
+    "prompt-sync": "^4.2.0",
+    "puppeteer": "^22.1.0"
+  },
+  "devDependencies": {
+    "electron": "^29.0.1"
+  }
+}
