@@ -10,7 +10,7 @@ import re
 3. Select the first request and copy the Cookie value in the Request Headers
 *Note: Don't use document.cookie as this will only extract cookies that are accessible via JavaScript and are not marked as `HttpOnly`
 '''
-COOKIE = "sb=1n1DZoGXd5L0bqfjbvYMHr6F; datr=NIBDZnhBkrCGwknjPtGU6qay; c_user=100034364812370; ps_n=1; ps_l=1; m_page_voice=100034364812370; b_user=61559943046466; xs=48%3A6McgocVTlLDVVA%3A2%3A1715699788%3A-1%3A6183%3ANRFfnDZA5HOZnQ%3AAcUESjcveBYXHt9NB0zNf9axxR5BrTU62lN0EBei-8Q; fr=1Ylw5az7P81kcARn8.AWU9bzljyURBwi-dpSeNB9Zlj8I.BmftcN..AAA.0.0.BmftcN.AWW_6x-CeLo; presence=C%7B%22t3%22%3A%5B%5D%2C%22utc3%22%3A1719588629672%2C%22v%22%3A1%7D; usida=eyJ2ZXIiOjEsImlkIjoiQXNmc3I0MjVvNmlxMSIsInRpbWUiOjE3MTk1ODg2NzR9; wd=866x911"
+COOKIE = ""
 
 '''Maximum Posts 
 - For Page, you can only read a maximum of 100 feed posts with the limit field:
